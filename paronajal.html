@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Психологический тест</title>
+    <title>Тест на Паранояла</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>100% ПСИХОЛОГИЧЕСТКИЙ СЕКСТ</h1>
+        <h1>Тест на Паранояла</h1>
+        <p>Ответьте на все вопросы, выбрав один из вариантов:</p>
         
         <div id="loading">Загрузка вопросов...</div>
         <div id="quiz"></div>
@@ -21,15 +22,15 @@
 
     <script>
         const answerOptions = [
-            { text: "Да", value: 2 },
-            { text: "Возможно", value: 1 },
-            { text: "Нет", value: 0 }
+            { text: "Да, точно про меня", value: 2 },
+            { text: "Да, но не всегда", value: 1 },
+            { text: "Нет, это не про меня", value: 0 }
         ];
         
         let questions = [];
         
         // Загружаем вопросы из JSON-файла
-        fetch('dolbaeb_questions.json')
+        fetch('paronajal_questions.json')
             .then(response => response.json())
             .then(data => {
                 questions = data;
@@ -91,20 +92,20 @@
             
             // Считаем баллы
             let totalScore = 0;
-
+            
             for (let i = 1; i <= questions.length; i++) {
                 const selectedValue = document.querySelector(`input[name="q${i}"]:checked`).value;
                 totalScore += parseInt(selectedValue);
             }
-
-            const maxPossibleScore = questions.length * 2;
-            const percentage = Math.round((totalScore * 100) / (maxPossibleScore) * 10) / 10;
+            
+            // Рассчитываем результат в процентах
+            const percentage = Math.round((totalScore * 100) / 50 * 100) / 100;
             
             // Выводим результат
             const resultDiv = document.getElementById('result');
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `
-                <h2>Ваш результат: ТЫ! 100% Долбаеб! ${percentage}%</h2>
+                <h2>Ваш результат: ${percentage}%</h2>
             `;
             
             // Прокручиваем страницу к результату
