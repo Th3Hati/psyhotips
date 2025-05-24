@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Психологический тест</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <h1>100% ПСИХОЛОГИЧЕСТКИЙ СЕКСТ</h1>
-        
+
         <div id="loading">Загрузка вопросов...</div>
         <div id="quiz"></div>
-        
+
         <button onclick="calculateResult()" id="submit-btn" disabled>Узнать результат</button>
         <a href="index.html" class="back-button">На главную</a>
-        
+        <a href="index_secret.html" class="back-button" id="allTestButton" style="display: none; background-color: green;">Ко всем тестам</a>
+
         <div id="result"></div>
     </div>
 
@@ -25,9 +28,9 @@
             { text: "Возможно", value: 1 },
             { text: "Нет", value: 0 }
         ];
-        
+
         let questions = [];
-        
+
         // Загружаем вопросы из JSON-файла
         fetch('dolbaeb_questions.json')
             .then(response => response.json())
@@ -41,20 +44,20 @@
                 console.error('Ошибка загрузки вопросов:', error);
                 document.getElementById('loading').textContent = 'Ошибка загрузки вопросов. Пожалуйста, обновите страницу.';
             });
-        
+
         // Отображаем вопросы на странице
         function renderQuestions() {
             const quizContainer = document.getElementById('quiz');
             quizContainer.innerHTML = '';
-            
+
             questions.forEach((question, index) => {
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question';
-                
+
                 const questionText = document.createElement('p');
                 questionText.textContent = `${index + 1}. ${question}`;
                 questionDiv.appendChild(questionText);
-                
+
                 answerOptions.forEach(answer => {
                     const label = document.createElement('label');
                     const radio = document.createElement('input');
@@ -62,33 +65,34 @@
                     radio.name = `q${index + 1}`;
                     radio.value = answer.value;
                     radio.required = true;
-                    
+
                     label.appendChild(radio);
                     label.appendChild(document.createTextNode(` ${answer.text}`));
                     questionDiv.appendChild(label);
                     questionDiv.appendChild(document.createElement('br'));
                 });
-                
+
                 quizContainer.appendChild(questionDiv);
             });
         }
-        
+
         function calculateResult() {
             // Проверяем, ответил ли пользователь на все вопросы
             let allAnswered = true;
-            
+
             for (let i = 1; i <= questions.length; i++) {
                 if (!document.querySelector(`input[name="q${i}"]:checked`)) {
                     allAnswered = false;
                     break;
                 }
             }
-            
+
             if (!allAnswered) {
-                alert("Пожалуйста, ответьте на все вопросы!");
+                const allTestButton = document.getElementById('allTestButton');
+                allTestButton.style.display = '';
                 return;
             }
-            
+
             // Считаем баллы
             let totalScore = 0;
 
@@ -99,17 +103,18 @@
 
             const maxPossibleScore = questions.length * 2;
             const percentage = Math.round((totalScore * 100) / (maxPossibleScore) * 10) / 10;
-            
+
             // Выводим результат
             const resultDiv = document.getElementById('result');
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `
                 <h2>Ваш результат: ТЫ! 100% Долбаеб! ${percentage}%</h2>
             `;
-            
+
             // Прокручиваем страницу к результату
             resultDiv.scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
+
 </html>
