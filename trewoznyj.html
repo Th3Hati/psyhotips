@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тест на Тревожный</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <h1>Тест на Тревожный</h1>
         <p>Ответьте на все вопросы, выбрав один из вариантов:</p>
-        
+
         <div id="loading">Загрузка вопросов...</div>
         <div id="quiz"></div>
-        
+
         <button onclick="calculateResult()" id="submit-btn" disabled>Узнать результат</button>
         <a href="index.html" class="back-button">На главную</a>
-        
+
         <div id="result"></div>
     </div>
 
@@ -26,9 +28,9 @@
             { text: "Да, но не всегда", value: 1 },
             { text: "Нет, это не про меня", value: 0 }
         ];
-        
+
         let questions = [];
-        
+
         // Загружаем вопросы из JSON-файла
         fetch('trewoznyj_questions.json')
             .then(response => response.json())
@@ -42,20 +44,20 @@
                 console.error('Ошибка загрузки вопросов:', error);
                 document.getElementById('loading').textContent = 'Ошибка загрузки вопросов. Пожалуйста, обновите страницу.';
             });
-        
+
         // Отображаем вопросы на странице
         function renderQuestions() {
             const quizContainer = document.getElementById('quiz');
             quizContainer.innerHTML = '';
-            
+
             questions.forEach((question, index) => {
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question';
-                
+
                 const questionText = document.createElement('p');
                 questionText.textContent = `${index + 1}. ${question}`;
                 questionDiv.appendChild(questionText);
-                
+
                 answerOptions.forEach(answer => {
                     const label = document.createElement('label');
                     const radio = document.createElement('input');
@@ -63,54 +65,74 @@
                     radio.name = `q${index + 1}`;
                     radio.value = answer.value;
                     radio.required = true;
-                    
+
                     label.appendChild(radio);
                     label.appendChild(document.createTextNode(` ${answer.text}`));
                     questionDiv.appendChild(label);
                     questionDiv.appendChild(document.createElement('br'));
                 });
-                
+
                 quizContainer.appendChild(questionDiv);
             });
         }
-        
+
         function calculateResult() {
             // Проверяем, ответил ли пользователь на все вопросы
             let allAnswered = true;
-            
+
             for (let i = 1; i <= questions.length; i++) {
                 if (!document.querySelector(`input[name="q${i}"]:checked`)) {
                     allAnswered = false;
                     break;
                 }
             }
-            
+
             if (!allAnswered) {
                 alert("Пожалуйста, ответьте на все вопросы!");
                 return;
             }
-            
+
             // Считаем баллы
             let totalScore = 0;
-            
+
             for (let i = 1; i <= questions.length; i++) {
                 const selectedValue = document.querySelector(`input[name="q${i}"]:checked`).value;
                 totalScore += parseInt(selectedValue);
             }
-            
+
             // Рассчитываем результат в процентах
             const percentage = Math.round((totalScore * 100) / 60 * 100) / 100;
-            
+
             // Выводим результат
             const resultDiv = document.getElementById('result');
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `
                 <h2>Ваш результат: ${percentage}%</h2>
             `;
-            
+
+            const newResult = {
+                testName: 'Тревожный',
+                percentage: percentage,
+            };
+
+            // Получаем текущие результаты или создаём новый массив
+            let testHistory = JSON.parse(localStorage.getItem('test_history')) || [];
+
+            // Добавляем новый результат в начало массива
+            testHistory.unshift(newResult);
+
+            // Обрезаем до 10 записей
+            if (testHistory.length > 10) {
+                testHistory = testHistory.slice(0, 10);
+            }
+
+            // Сохраняем обратно
+            localStorage.setItem('test_history', JSON.stringify(testHistory));
+
             // Прокручиваем страницу к результату
             resultDiv.scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
+
 </html>
