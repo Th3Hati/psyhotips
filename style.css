@@ -98,3 +98,66 @@ label {
 input[type="radio"] {
     margin-right: 10px;
 }
+
+/* Бургер-иконка */
+.burger-icon {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 1002;
+    color: #fff;
+    user-select: none;
+}
+
+/* Затемнение экрана */
+#burger-menu .overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(30, 32, 33, 0.7);
+    z-index: 1000;
+    display: none;
+}
+
+/* Панель, выпадающая под бургером */
+.menu-dropdown {
+    position: fixed;
+    top: 60px; /* под иконкой */
+    right: 20px;
+    background-color: #2d2f30;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    display: none;
+    flex-direction: column;
+    z-index: 1001;
+}
+
+/* Кнопки */
+.menu-button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    margin: 8px 0;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.menu-button:hover {
+    background-color: #2980b9;
+}
+
+/* Активное состояние */
+#burger-menu.active .overlay {
+    display: block;
+}
+
+#burger-menu.active .menu-dropdown {
+    display: flex;
+}
