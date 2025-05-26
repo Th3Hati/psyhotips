@@ -18,13 +18,72 @@
         <a href="epileptiod.html" class="start-button">Тест на Эпилептоида</a>
         <a href="gipertim.html" class="start-button">Тест на Гипертима</a>
         <a href="paronajal.html" class="start-button">Тест на Паранояла</a>
-        <a href="emotiw.html" class="start-button">Тест на Эмотива</a>
+        <a href="emotiw.html" class="start-button" style="display: none;">Тест на Эмотива</a>
         <a href="shizoid.html" class="start-button" style="display: none;">Тест на Шизоида</a>
         <a href="trewoznyj.html" class="start-button" style="display: none;">Тест на Тревожный</a>
     </div>
 
     <script>
         const testHistory = JSON.parse(localStorage.getItem('test_history')) || [];
+
+        const testTypes = [
+            'Истероид', 'Эпилептоид', 'Гипертим', 'Параноял',
+            'Эмотив', 'Шизоид', 'Тревожный'
+        ];
+
+        const container = document.querySelector('.container');
+
+        // Форма для добавления результата вручную
+        const formDiv = document.createElement('div');
+        formDiv.className = 'test-info';
+        formDiv.innerHTML = `<h2>Добавить процент</h2>`;
+
+        const select = document.createElement('select');
+        testTypes.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type;
+            option.textContent = type;
+            select.appendChild(option);
+        });
+
+        select.style.padding = '10px 20px';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'Процент';
+        input.min = 0;
+        input.max = 100;
+        input.style.margin = '0 10px';
+        input.style.padding = '10px 20px';
+
+        const button = document.createElement('button');
+        button.textContent = 'Подтвердить';
+        button.onclick = () => {
+            const testName = select.value;
+            const percentage = parseFloat(input.value);
+            if (isNaN(percentage) || percentage < 0 || percentage > 100) {
+                alert('Введите корректный процент (от 0 до 100)');
+                return;
+            }
+
+            const newResult = {
+                testName: testName,
+                percentage: percentage,
+                date: new Date().toLocaleString()
+            };
+
+            let testHistory = JSON.parse(localStorage.getItem('test_history')) || [];
+            testHistory.unshift(newResult);
+            if (testHistory.length > 10) testHistory = testHistory.slice(0, 10);
+            localStorage.setItem('test_history', JSON.stringify(testHistory));
+
+            location.reload(); // обновляем страницу, чтобы показать новые данные
+        };
+
+        formDiv.appendChild(select);
+        formDiv.appendChild(input);
+        formDiv.appendChild(button);
+        container.appendChild(formDiv);
 
         if (testHistory.length > 0) {
             const container = document.querySelector('.container');
