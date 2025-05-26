@@ -9,6 +9,17 @@
 </head>
 
 <body>
+    <div id="burger-menu">
+        <div class="burger-icon" onclick="toggleMenu()">
+            &#9776;
+        </div>
+        <div class="overlay" onclick="toggleMenu()"></div>
+        <div class="menu-dropdown">
+            <a href="https://th3hati.github.io/psyhotips" class="menu-button">К тестам</a>
+            <a href="https://th3hati.github.io/main" class="menu-button" style="background-color: red;">На главную</a>
+        </div>
+    </div>
+    
     <div class="container">
         <h1>ТУТ ничего нет</h1>
         <div class="test-info">
@@ -101,6 +112,12 @@
 
             historyDiv.appendChild(list);
             container.appendChild(historyDiv);
+        }
+    </script>
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('burger-menu');
+            menu.classList.toggle('active');
         }
     </script>
 </body>
